@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="tk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KASSA - Berdi_B</title>
+    <style>
+        /* Premium Dark Mode & Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at top left, #0e1015, #050608);
+            color: #f5f5f7;
+            min-height: 100vh;
+            padding: 20px 15px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Esasy Konteýner */
+        .app-container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        /* Ýokarky Header we Berdi_B Logotip */
+        .header-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            position: absolute;
+            left: 0;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, #ff007f, #7f00ff, #00f0ff, #ff007f);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: rgbFlow 6s ease infinite;
+            text-shadow: 0 0 15px rgba(127, 0, 255, 0.3);
+        }
+
+        header h1 {
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #ffffff 0%, #a1a1aa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Bölüm Düwmeleri */
+        .navigation-tabs {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            color: #8e8e93;
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-btn:hover { color: #fff; background: rgba(255, 255, 255, 0.02); }
+        .tab-btn.active {
+            background: linear-gradient(180deg, #2f96ff 0%, #0071e3 100%);
+            color: #fff;
+            box-shadow: 0 8px 20px rgba(0, 113, 227, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .tab-content {
+            display: none;
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .tab-content.active { display: block; }
+
+        /* Awtomatiki Kod Barlaýan Panel */
+        .auth-container {
+            text-align: center;
+            padding: 50px 20px;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 20px;
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .auth-container h3 {
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #e5e5ea;
+            letter-spacing: -0.2px;
+        }
+
+        /* Lupa şekilli Gözleg meýdançasy */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .search-wrapper input {
+            padding-left: 44px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8e8e93;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        /* Form we Inputlar */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .input-group.full-width { grid-column: span 2; }
+
+        label {
+            font-size: 13px;
+            color: #8e8e93;
+            font-weight: 500;
+            padding-left: 2px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        input:focus {
+            border-color: #0071e3;
+            background: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.2), inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* Düwmeler */
+        .btn-primary {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(180deg, #2f96ff 0%, #0071e3 100%);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 12px;
+            box-shadow: 0 4px 12px rgba(0, 113, 227, 0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .btn-primary:hover { 
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(0, 113, 227, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-success {
+            background: linear-gradient(180deg, #34c759 0%, #28cd41 100%);
+            box-shadow: 0 4px 12px rgba(48, 209, 88, 0.2);
+        }
+        .btn-success:hover { box-shadow: 0 6px 16px rgba(48, 209, 88, 0.3); }
+        
+        .btn-sell {
+            background: rgba(48, 209, 88, 0.15);
+            color: #30d158;
+            border: 1px solid rgba(48, 209, 88, 0.25);
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+        }
+        .btn-sell:hover { 
+            background: #30d158; 
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(48, 209, 88, 0.2);
+        }
+
+        .btn-action {
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            margin-right: 4px;
+            transition: all 0.2s ease;
+        }
+        .btn-edit { background: rgba(255, 159, 10, 0.15); color: #ff9f0a; border: 1px solid rgba(255, 159, 10, 0.2); }
+        .btn-edit:hover { background: #ff9f0a; color: #fff; }
+        
+        .btn-delete { background: rgba(255, 69, 58, 0.15); color: #ff453a; border: 1px solid rgba(255, 69, 58, 0.2); }
+        .btn-delete:hover { background: #ff453a; color: #fff; }
+
+        /* Wagtlaýyn Bölüm */
+        .wagtlayyn-section {
+            background: rgba(255, 159, 10, 0.03);
+            border: 1px dashed rgba(255, 159, 10, 0.25);
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .wagtlayyn-title {
+            font-size: 14px;
+            color: #ff9f0a;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Tablissa Dizaýny */
+        .table-container {
+            margin-top: 25px;
+            overflow-x: auto;
+            background: rgba(255, 255, 255, 0.01);
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+            min-width: 620px;
+        }
+
+        th {
+            color: #8e8e93;
+            font-weight: 600;
+            padding: 16px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        td {
+            padding: 16px 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+            color: #e5e5ea;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(255, 255, 255, 0.015); }
+
+        .text-green { color: #30d158; font-weight: 600; }
+        .text-orange { color: #ff9f0a; font-weight: 600; }
+        .text-red { color: #ff453a; font-weight: 600; }
+
+        /* Otçet Kartlary */
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .report-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+
+        .report-card h3 {
+            font-size: 12px;
+            color: #8e8e93;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
+        .report-card .value { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+
+        /* Animasiýalar */
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes rgbFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header-wrapper">
+            <div class="brand-logo">Berdi_B</div>
+            <header>
+                <h1>KASSA</h1>
+            </header>
+        </div>
+
+        <nav class="navigation-tabs">
+            <button class="tab-btn active" id="btnGelenTab" onclick="switchTab('gelenBahaTab', this)">1. Gelen Baha</button>
+            <button class="tab-btn" onclick="switchTab('satmalyBahaTab', this)">2. Satmaly Baha</button>
+            <button class="tab-btn" onclick="switchTab('otcetTab', this)">3. Girdeýji & Otçet</button>
+        </nav>
+
+        <section id="gelenBahaTab" class="tab-content active">
+            
+            <div id="lockPanelGelen" class="auth-container">
+                <h3>Bölüme girmek üçin gizlin kody giriziň</h3>
+                <div class="input-group" style="max-width: 250px; margin: 0 auto;">
+                    <input type="password" id="secretCodeGelen" placeholder="Gizlin kod" style="text-align: center;" oninput="checkCodeGelen(this.value)">
+                </div>
+            </div>
+
+            <div id="secureContentGelen" style="display: none;">
+                <div class="form-grid">
+                    <div class="input-group full-width">
+                        <label>Harydyň Ady</label>
+                        <input type="text" id="pName" placeholder="Meselem: PlayStation 5">
+                    </div>
+                    <div class="input-group">
+                        <label>Sany (Stok)</label>
+                        <input type="number" id="pQty" value="1" min="1">
+                    </div>
+                    <div class="input-group">
+                        <label>Bahasy (Gelen bahasy)</label>
+                        <input type="number" id="pCost" placeholder="0.00" oninput="calculateByCostOrPercent()">
+                    </div>
+                    <div class="input-group">
+                        <label>Proşent (%)</label>
+                        <input type="number" id="pPercent" placeholder="10" oninput="calculateByPercent()">
+                    </div>
+                    <div class="input-group full-width">
+                        <label>Satuw Bahasy (Özüňiz hem goýup bilersiňiz)</label>
+                        <input type="number" id="pPrice" placeholder="0.00" oninput="calculateByPrice()">
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="addWagtlayyn()">Sanawa wagtlaýyn goş</button>
+
+                <div id="wagtlayynAres" class="wagtlayyn-section" style="display: none;">
+                    <div class="wagtlayyn-title">⏳ Taslama Sanawy (Gözden geçiriň)</div>
+                    <div class="table-container" style="margin-top: 0;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Ady</th>
+                                    <th>Sany</th>
+                                    <th>Bahasy</th>
+                                    <th>Hasaplanan %</th>
+                                    <th>Satuw Baha</th>
+                                    <th>Işlem</th>
+                                </tr>
+                            </thead>
+                            <tbody id="wagtlayynTableBody"></tbody>
+                        </table>
+                    </div>
+                    <button class="btn-primary btn-success" style="margin-top: 15px; margin-bottom: 0;" onclick="hasabaGecir()">Hemmesini Hasaba Geçir (Sklada Goş)</button>
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ady</th>
+                                <th>Sany</th>
+                                <th>Bahasy</th>
+                                <th>Proşent</th>
+                                <th>Satuw Baha</th>
+                                <th>Işlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stokTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="satmalyBahaTab" class="tab-content">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="searchSatmaly" placeholder="Haryt gözle..." oninput="filterSatmaly()">
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Haryt Ady</th>
+                            <th>Galan Sany</th>
+                            <th>Satuw Bahasy</th>
+                            <th>Sany Saýla</th>
+                            <th>Işlem</th>
+                        </tr>
+                    </thead>
+                    <tbody id="satysTableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="otcetTab" class="tab-content">
+            
+            <div id="lockPanelOtcet" class="auth-container">
+                <h3>Bu bölüme girmek üçin gizlin kody giriziň</h3>
+                <div class="input-group" style="max-width: 250px; margin: 0 auto;">
+                    <input type="password" id="secretCodeOtcet" placeholder="Gizlin kod" style="text-align: center;" oninput="checkCodeOtcet(this.value)">
+                </div>
+            </div>
+
+            <div id="secureContentOtcet" style="display: none;">
+                <div class="report-grid">
+                    <div class="report-card">
+                        <h3>Jemi Satylan Haryt</h3>
+                        <div class="value text-green" id="repSatylanSany">0</div>
+                    </div>
+                    <div class="report-card">
+                        <h3>Skladdaky Haryt (Stok)</h3>
+                        <div class="value" id="repSatylmadykSany">0</div>
+                    </div>
+                    <div class="report-card">
+                        <h3>Elindäki Haryt Puly</h3>
+                        <div class="value text-orange" id="repElindakiPul">0.00 TMT</div>
+                    </div>
+                    <div class="report-card">
+                        <h3>Obşy Giden Pul (Aýlyk)</h3>
+                        <div class="value text-red" id="repObsyGidenPul">0.00 TMT</div>
+                    </div>
+                    <div class="report-card" style="grid-column: span 2;">
+                        <h3>Jemi Arassa Girdeýji (Peýda)</h3>
+                        <div class="value text-green" id="repJemiGirdeyji">0.00 TMT</div>
+                    </div>
+                </div>
+
+                <div class="search-wrapper">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="searchOtcet" placeholder="Satylan harytlardan gözle..." oninput="filterOtcet()">
+                </div>
+
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Haryt Ady</th>
+                                <th>Satylan Sany</th>
+                                <th>Jemi Bahasy</th>
+                                <th>Arassa Peýda</th>
+                                <th>Işlem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="otcetTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let harytlar = JSON.parse(localStorage.getItem('kassa_harytlar')) || [];
+        let wagtlayynHarytlar = JSON.parse(localStorage.getItem('kassa_wagtlayyn')) || [];
+        let satylanlar = JSON.parse(localStorage.getItem('kassa_satylanlar')) || [];
+        
+        let obsyGidenPulMaýa = parseFloat(localStorage.getItem('kassa_obsy_giden')) || 0;
+
+        // Her bölüm üçin aýratyn rugsat statusy
+        let gelenUnlocked = false;
+        let otcetUnlocked = false;
+
+        window.onload = function() {
+            updateTables();
+        };
+
+        function saveToStorage() {
+            localStorage.setItem('kassa_harytlar', JSON.stringify(harytlar));
+            localStorage.setItem('kassa_wagtlayyn', JSON.stringify(wagtlayynHarytlar));
+            localStorage.setItem('kassa_satylanlar', JSON.stringify(satylanlar));
+            localStorage.setItem('kassa_obsy_giden', obsyGidenPulMaýa.toString());
+        }
+
+        // 1-nji Bölüm üçin kod barlaýjy
+        function checkCodeGelen(value) {
+            if (value === '    ' || value === '1234') {
+                gelenUnlocked = true;
+                document.getElementById('lockPanelGelen').style.display = 'none';
+                document.getElementById('secureContentGelen').style.display = 'block';
+                updateTables();
+            }
+        }
+
+        // 3-nji Bölüm üçin kod barlaýjy
+        function checkCodeOtcet(value) {
+            if (value === '    ' || value === '1234') {
+                otcetUnlocked = true;
+                document.getElementById('lockPanelOtcet').style.display = 'none';
+                document.getElementById('secureContentOtcet').style.display = 'block';
+                updateTables();
+            }
+        }
+
+        function switchTab(tabId, element) {
+            // Başga bir bölüme geçilende öňki rugsatlary ýapýarys we täzeden kod soradýarys
+            gelenUnlocked = false;
+            otcetUnlocked = false;
+
+            // Ähli bölümleri täzeden beklige alýarys
+            document.getElementById('lockPanelGelen').style.display = 'block';
+            document.getElementById('secureContentGelen').style.display = 'none';
+            document.getElementById('secretCodeGelen').value = '';
+
+            document.getElementById('lockPanelOtcet').style.display = 'block';
+            document.getElementById('secureContentOtcet').style.display = 'none';
+            document.getElementById('secretCodeOtcet').value = '';
+
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            element.classList.add('active');
+
+            updateTables();
+        }
+
+        function calculateByPercent() {
+            const cost = parseFloat(document.getElementById('pCost').value) || 0;
+            const percent = parseFloat(document.getElementById('pPercent').value) || 0;
+            const priceInput = document.getElementById('pPrice');
+            
+            if (cost > 0) {
+                const totalPrice = cost + (cost * (percent / 100));
+                priceInput.value = totalPrice.toFixed(2);
+            }
+        }
+
+        function calculateByCostOrPercent() {
+            const percent = document.getElementById('pPercent').value;
+            if (percent !== "") {
+                calculateByPercent();
+            } else {
+                calculateByPrice();
+            }
+        }
+
+        function calculateByPrice() {
+            const cost = parseFloat(document.getElementById('pCost').value) || 0;
+            const price = parseFloat(document.getElementById('pPrice').value) || 0;
+            const percentInput = document.getElementById('pPercent');
+
+            if (cost > 0 && price >= cost) {
+                const calculatedPercent = ((price - cost) / cost) * 100;
+                percentInput.value = calculatedPercent.toFixed(1);
+            } else if (price < cost && price > 0) {
+                percentInput.value = "0";
+            }
+        }
+
+        function addWagtlayyn() {
+            const name = document.getElementById('pName').value.trim();
+            const qty = parseInt(document.getElementById('pQty').value) || 0;
+            const cost = parseFloat(document.getElementById('pCost').value) || 0;
+            const percent = parseFloat(document.getElementById('pPercent').value) || 0;
+            const price = parseFloat(document.getElementById('pPrice').value) || 0;
+            const date = new Date().toLocaleDateString();
+
+            if (!name || qty <= 0 || cost <= 0 || price <= 0) {
+                alert('Ähli meýdançalary dogry dolduryň!');
+                return;
+            }
+
+            wagtlayynHarytlar.push({ name, qty, cost, percent, price, date });
+
+            document.getElementById('pName').value = '';
+            document.getElementById('pQty').value = '1';
+            document.getElementById('pCost').value = '';
+            document.getElementById('pPrice').value = '';
+            document.getElementById('pPercent').value = '';
+
+            saveToStorage();
+            updateTables();
+        }
+
+        function deleteWagtlayyn(index) {
+            wagtlayynHarytlar.splice(index, 1);
+            saveToStorage();
+            updateTables();
+        }
+
+        function hasabaGecir() {
+            if (wagtlayynHarytlar.length === 0) return;
+            
+            wagtlayynHarytlar.forEach(w => {
+                obsyGidenPulMaýa += (w.qty * w.cost);
+            });
+
+            harytlar = harytlar.concat(wagtlayynHarytlar);
+            wagtlayynHarytlar = []; 
+            alert('Ähli harytlar üstünlikli hasaba geçirildi we Sklada goşuldy!');
+            saveToStorage();
+            updateTables();
+        }
+
+        function editHaryt(index) {
+            const h = harytlar[index];
+            const tazeAdy = prompt("Haryt adyny düzet:", h.name);
+            if (tazeAdy === null) return;
+            
+            const tazeSany = prompt("Sanyny düzet (Stok):", h.qty);
+            const tazeBaha = prompt("Gelen bahasyny düzet:", h.cost);
+            const tazeSatuwBaha = prompt("Satuw bahasyny el bilen düzet:", h.price);
+
+            if (tazeAdy.trim() !== "" && !isNaN(tazeSany) && !isNaN(tazeBaha) && !isNaN(tazeSatuwBaha)) {
+                obsyGidenPulMaýa -= (h.qty * h.cost);
+
+                h.name = tazeAdy.trim();
+                h.qty = parseInt(tazeSany);
+                h.cost = parseFloat(tazeBaha);
+                h.price = parseFloat(tazeSatuwBaha);
+                
+                obsyGidenPulMaýa += (h.qty * h.cost);
+
+                if (h.cost > 0) {
+                    h.percent = ((h.price - h.cost) / h.cost) * 100;
+                }
+                
+                saveToStorage();
+                updateTables();
+                alert("Haryt maglumatlary üstünlikli üýtgedildi!");
+            } else {
+                alert("Ýalňyş maglumat girizildi!");
+            }
+        }
+
+        function deleteHaryt(index) {
+            if (confirm("Bu harydy skladdan doly öçürmek isleýärsinizmi? (Giden obşy puldan hem aýrylar)")) {
+                const h = harytlar[index];
+                obsyGidenPulMaýa -= (h.qty * h.cost);
+                
+                harytlar.splice(index, 1);
+                saveToStorage();
+                updateTables();
+            }
+        }
+
+        function cancelSatys(index) {
+            if (confirm("Bu satuwy ýatyrasynyz gelýärmi? Harytlar yzyna sklada goşular.")) {
+                const satylan = satylanlar[index];
+                const skladHaryt = harytlar.find(h => h.name === satylan.name);
+                
+                if (skladHaryt) {
+                    skladHaryt.qty += satylan.qty;
+                } else {
+                    harytlar.push({
+                        name: satylan.name,
+                        qty: satylan.qty,
+                        cost: satylan.cost,
+                        percent: ((satylan.singlePrice - satylan.cost) / satylan.cost) * 100,
+                        price: satylan.singlePrice,
+                        date: new Date().toLocaleDateString()
+                    });
+                }
+                
+                satylanlar.splice(index, 1);
+                saveToStorage();
+                updateTables();
+                alert("Satuw ýatyryldy we harytlar sklada yzarlandy!");
+            }
+        }
+
+        function filterSatmaly() {
+            const query = document.getElementById('searchSatmaly').value.toLowerCase();
+            const rows = document.querySelectorAll('#satysTableBody tr');
+            rows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                row.style.display = name.includes(query) ? '' : 'none';
+            });
+        }
+
+        function filterOtcet() {
+            const query = document.getElementById('searchOtcet').value.toLowerCase();
+            const rows = document.querySelectorAll('#otcetTableBody tr');
+            rows.forEach(row => {
+                const name = row.cells[0].innerText.toLowerCase();
+                row.style.display = name.includes(query) ? '' : 'none';
+            });
+        }
+
+        function updateTables() {
+            const wagtBody = document.getElementById('wagtlayynTableBody');
+            const wagtSec = document.getElementById('wagtlayynAres');
+            if (wagtBody) {
+                if (wagtlayynHarytlar.length > 0) {
+                    wagtSec.style.display = 'block';
+                    wagtBody.innerHTML = '';
+                    wagtlayynHarytlar.forEach((w, index) => {
+                        wagtBody.innerHTML += `
+                            <tr>
+                                <td><b>${w.name}</b></td>
+                                <td>${w.qty}</td>
+                                <td>${w.cost.toFixed(2)} TMT</td>
+                                <td class="text-orange">%${w.percent}</td>
+                                <td class="text-green">${w.price.toFixed(2)} TMT</td>
+                                <td><button class="btn-action btn-delete" onclick="deleteWagtlayyn(${index})">Aýyr</button></td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    wagtSec.style.display = 'none';
+                }
+            }
+
+            const stokBody = document.getElementById('stokTableBody');
+            if (stokBody && gelenUnlocked) {
+                stokBody.innerHTML = '';
+                harytlar.forEach((h, index) => {
+                    stokBody.innerHTML += `
+                        <tr>
+                            <td><b>${h.name}</b></td>
+                            <td>${h.qty}</td>
+                            <td>${h.cost.toFixed(2)} TMT</td>
+                            <td class="text-orange">%${h.percent.toFixed(1)}</td>
+                            <td class="text-green">${h.price.toFixed(2)} TMT</td>
+                            <td>
+                                <button class="btn-action btn-edit" onclick="editHaryt(${index})">Düzet</button>
+                                <button class="btn-action btn-delete" onclick="deleteHaryt(${index})">Öçür</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            const satysBody = document.getElementById('satysTableBody');
+            if (satysBody) {
+                satysBody.innerHTML = '';
+                harytlar.forEach((h, index) => {
+                    if(h.qty > 0) {
+                        satysBody.innerHTML += `
+                            <tr>
+                                <td><b>${h.name}</b></td>
+                                <td>${h.qty}</td>
+                                <td class="text-green">${h.price.toFixed(2)} TMT</td>
+                                <td><input type="number" id="sellQty_${index}" value="1" min="1" max="${h.qty}" style="width:75px; padding:6px; text-align:center;"></td>
+                                <td><button class="btn-sell" onclick="harytSat(${index})">Sat</button></td>
+                            </tr>
+                        `;
+                    }
+                });
+                filterSatmaly();
+            }
+
+            let jemiSatylanSany = 0;
+            let jemiSatylmadykSany = 0;
+            let elindakiHarytPuly = 0;
+            let jemiGirdeyjiPeýda = 0;
+
+            harytlar.forEach(h => {
+                jemiSatylmadykSany += h.qty;
+                elindakiHarytPuly += (h.qty * h.cost);
+            });
+
+            const otcetBody = document.getElementById('otcetTableBody');
+            if (otcetBody && otcetUnlocked) {
+                otcetBody.innerHTML = '';
+                satylanlar.forEach((s, index) => {
+                    jemiSatylanSany += s.qty;
+                    jemiGirdeyjiPeýda += s.peyda;
+                    
+                    otcetBody.innerHTML += `
+                        <tr>
+                            <td><b>${s.name}</b></td>
+                            <td>${s.qty} sany</td>
+                            <td>${s.price.toFixed(2)} TMT</td>
+                            <td class="text-green">+${s.peyda.toFixed(2)} TMT</td>
+                            <td><button class="btn-action btn-delete" onclick="cancelSatys(${index})">Ýatyr</button></td>
+                        </tr>
+                    `;
+                });
+                filterOtcet();
+            }
+
+            if (otcetUnlocked) {
+                document.getElementById('repSatylanSany').innerText = jemiSatylanSany;
+                document.getElementById('repSatylmadykSany').innerText = jemiSatylmadykSany;
+                document.getElementById('repElindakiPul').innerText = elindakiHarytPuly.toFixed(2) + ' TMT';
+                document.getElementById('repObsyGidenPul').innerText = obsyGidenPulMaýa.toFixed(2) + ' TMT';
+                document.getElementById('repJemiGirdeyji').innerText = jemiGirdeyjiPeýda.toFixed(2) + ' TMT';
+            }
+        }
+
+        function harytSat(index) {
+            const sellQtyInput = document.getElementById(`sellQty_${index}`);
+            const sellQty = parseInt(sellQtyInput.value);
+            const haryt = harytlar[index];
+
+            if (sellQty > haryt.qty || sellQty <= 0) {
+                alert('Ýeterlik haryt ýok ýa-da mukdar ýalňyş!');
+                return;
+            }
+
+            const peyda = (haryt.price - haryt.cost) * sellQty;
+
+            satylanlar.push({
+                name: haryt.name,
+                qty: sellQty,
+                cost: haryt.cost,
+                singlePrice: haryt.price,
+                price: haryt.price * sellQty,
+                peyda: peyda
+            });
+
+            haryt.qty -= sellQty;
+            saveToStorage();
+            updateTables();
+            alert('Satuw üstünlikli amala aşyryldy!');
+        }
+    </script>
+</body>
+</html>
